@@ -1,4 +1,11 @@
-# Express App Setup
+
+# Project Title: Canteen WebApp
+
+## Description
+    
+    A goal to digitise Central and State government office's internal canteens.
+
+## Express App Setup
 
 This guide will help you set up and run the Express.js application locally.
 
@@ -30,12 +37,6 @@ Ensure that you have the following installed:
     npm run dev
 
 ## API Documentation - https://canteen-server-a50j.onrender.com/api/v1/api-docs
-
-## Project Title: Canteen WebApp
-
-## Description
-    
-    A goal to digitise Central and State government office's internal canteens.
 
 ## Contributing 
 
