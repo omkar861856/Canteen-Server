@@ -29,7 +29,7 @@ Ensure that you have the following installed:
     
     npm run dev
 
-## After starting the server - hit on -  http://localhost:3000/api/v1/api-docs for API docs
+## API Documentation - https://canteen-server-a50j.onrender.com/api/v1/api-docs
 
 ## Project Title: Canteen WebApp
 
