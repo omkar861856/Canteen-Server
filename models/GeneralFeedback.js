@@ -7,6 +7,8 @@ const feedbackSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
+    kitchenId:{type:String, required:true},
+    userId:{type:String, required:true}
   },
   { collection: "Feedbacks" } // Set the collection name explicitly
 );

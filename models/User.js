@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
     token:{ type: String, required: true}, 
     isLoggedIn:{type:Boolean, required: true},
     isRegistered: {type: Boolean, required: true},
+    connectedKitchen: {type:String},
     isKitchen: {type: Boolean},
     kitchenId: {type: String},
     kitchenName: {type: String},

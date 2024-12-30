@@ -41,6 +41,7 @@ const router = Router();
  *       400:
  *         description: Bad request.
  */
+
 // Create Order
 router.post('/', async (req, res) => {
   try {
@@ -53,6 +54,7 @@ router.post('/', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
 
 /**
 * @swagger
@@ -155,9 +157,10 @@ router.delete('/:id', async (req, res) => {
 */
 
 // Get All Orders
-router.get('/', async (req, res) => {
+router.get('/:kitchenId', async (req, res) => {
+  const {kitchenId} = req.params;
   try {
-    const orders = await Order.find();
+    const orders = await Order.find({kitchenId});
     res.status(200).json(orders);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -185,11 +188,14 @@ router.get('/', async (req, res) => {
 
 // Get All Orders by Phone
 
-router.get('/:phone', async (req, res) => {
-  const { phone } = req.params;
+router.get('/:phone/:kitchenId', async (req, res) => {
+  const { phone, kitchenId } = req.params;
   try {
-    const orders = await Order.find({ userPhoneNumber: phone });
-    res.status(200).json(orders);
+  // Find orders matching both userPhoneNumber and kitchenId
+  const orders = await Order.find({
+    userPhoneNumber: phone,
+    kitchenId: kitchenId,
+  });    res.status(200).json(orders);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

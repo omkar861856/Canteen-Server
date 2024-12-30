@@ -9,7 +9,8 @@ const inventorySchema = new mongoose.Schema({
     image: { type: String, required: true },
     createdAt: { type: String, required: true },
     updatedAt: { type: String, required: true },
-    preparationTime: { type: Number, required: true }
+    preparationTime: { type: Number, required: true },
+    kitchenId: {type:String, required: true}
   }, { collection: "Inventory" });
   
   const Inventory = mongoose.model('Inventory', inventorySchema);

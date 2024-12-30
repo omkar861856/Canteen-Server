@@ -54,7 +54,7 @@ const __dirname = dirname(__filename);
  *         description: Error saving item to the database.
  */
 router.post('/', upload.single('image'), async (req, res) => {
-    const { name, category, price, createdAt, itemId, availability, preparationTime } = req.body;
+    const { name, category, price, createdAt, itemId, availability, preparationTime, kitchenId } = req.body;
     const imagePath = req.file ? `/images/${req.file.filename}` : null;  // Store image path
     const newItem = new Inventory({
       name,
@@ -66,6 +66,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       availability: availability === 'true',
       updatedAt: new Date().toISOString(),
       preparationTime,
+      kitchenId
     });
   
     try {
@@ -239,23 +240,30 @@ router.post('/', upload.single('image'), async (req, res) => {
   
   // get all inventory items  
   // GET 
- router.get('/', async (req, res) => {
+  router.post('/kitchen', async (req, res) => {
+    const { kitchenId } = req.body;
+    console.log("Kitchen id:", kitchenId);
+    
     try {
-      const items = await Inventory.find();
+      // Query the database for items matching the kitchenId
+      const items = await Inventory.find({ kitchenId });
+      console.log("Fetched items:", items);
+      
       // Add base URL to image paths so they can be accessed from the frontend
-      // Map items to include the image path for the frontend
       const updatedItems = items.map(item => ({
         ...item.toObject(),
-        imageUrl: `${item.image}`,  // Relative URL for the image
+        imageUrl: `${item.image}`, // Update this as per your base URL
       }));
+      
       res.status(200).json(updatedItems);
     } catch (error) {
+      console.error("Error fetching inventory items:", error);
       res.status(500).json({ error: 'Error fetching inventory items', details: error.message });
     }
   });
-  
+   
 
-  /**
+/**
  * @swagger
  * /api/v1/inventory/{itemId}:
  *   get:
@@ -292,7 +300,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
   });
   
-  /**
+/**
  * @swagger
  * inventorycomponents:
  *   schemas:

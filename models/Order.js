@@ -16,7 +16,8 @@ const orderSchema = new mongoose.Schema({
   razorpayPaymentId: {type: String, required: true},
   cabinName: {type: String, required: true},
   extraInfo: {type: String},
-  specialInstructions: {type: String}
+  specialInstructions: {type: String},
+  kitchenId: {type:String, required: true}
 
 }, { collection: "Orders" });
 

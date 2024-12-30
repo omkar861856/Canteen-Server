@@ -33,6 +33,7 @@ const paymentSchema = new Schema({
     bank_transaction_id: { type: String, required: true },
   },
   created_at: { type: Number, required: true },
-});
+  kitchenId: {type: String, required: true}
+},{ collection: "Payments" });
 
 export default model('Payment', paymentSchema);

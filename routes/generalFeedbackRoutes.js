@@ -44,7 +44,7 @@ const router = express.Router();
 
 // Create feedback
 router.post("/", async (req, res) => {
-  const { feedback, rating, fullName } = req.body;
+  const { feedback, rating, fullName, kitchenId, userId } = req.body;
 
   // Validate input
   if (!feedback || !rating || !fullName) {
@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const newFeedback = new GeneralFeedback({ feedback, rating, fullName });
+    const newFeedback = new GeneralFeedback(req.body);
     const savedFeedback = await newFeedback.save();
     res.status(201).json({ message: "Feedback submitted successfully", feedback: savedFeedback });
   } catch (error) {

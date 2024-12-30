@@ -51,13 +51,15 @@ const instance = new Razorpay({
 
 router.post("/orders", async (req, res) => {
     const { totalPrice } = req.body;
+    const generateReceipt = () => `receipt_${Date.now()}`;
+
     let amount = parseInt(totalPrice, 10) * 100;
     try {
 
         const options = {
             amount: amount,
             currency: "INR",
-            receipt: "receipt order no 777"
+            receipt: generateReceipt()
         }
 
         const order = await instance.orders.create(options)

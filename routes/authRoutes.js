@@ -129,11 +129,9 @@ router.post('/signin/send-otp', async (req, res) => {
  */
 
 router.post('/signup/send-otp', async (req, res) => {
-    const { firstName, lastName, phone, isKitchen, kitchenId, kitchenName } = req.body;
+    const { firstName, lastName, phone, isKitchen, kitchenId, kitchenName, connectedKitchen } = req.body;
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // OTP valid for 5 minutes
-
-    console.log(otp)
 
     let user = await User.findOne({ phone });
 
@@ -155,12 +153,13 @@ router.post('/signup/send-otp', async (req, res) => {
         kitchenId, 
         kitchenName,
         isKitchenOnline: false,
+        connectedKitchen
     });
 
     await user.save();
 
     try {
-        const response = await axios.get(`https://www.fast2sms.com/dev/bulkV2?authorization=${fast2sms_auth}&route=otp&variables_values=${otp}&flash=0&numbers=${phone}&schedule_time=`)
+        await axios.get(`https://www.fast2sms.com/dev/bulkV2?authorization=${fast2sms_auth}&route=otp&variables_values=${otp}&flash=0&numbers=${phone}&schedule_time=`)
         res.status(200).send('OTP sent successfully!');
     } catch (err) {
         res.status(500).send('Failed to send OTP.');
@@ -197,7 +196,6 @@ router.post('/signup/send-otp', async (req, res) => {
 // Verify OTP
 router.post('/verify-otp', async (req, res) => {
     const { phone, otp } = req.body;
-    console.log(req.body)
     const user = await User.findOne({ phone });
 
     if (!user || user.otp !== otp || new Date() > user.otpExpiresAt) {
@@ -290,8 +288,6 @@ router.post('/resend-otp', async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // OTP valid for 5 minutes
 
-    console.log(otp)
-
     let user = await User.findOne({ phone });
 
     user.otp = otp;
@@ -364,7 +360,6 @@ router.get('/user', (req, res) => {
 router.post('/update-kitchen-status', async (req,res)=>{
     try {
         const {kitchenId, status} = req.body;
-        console.log({kitchenId, status})
         const user = await User.findOne({ kitchenId });
         if(!user){
             return res.status(404).send({message:"User not found"})
@@ -406,7 +401,7 @@ router.get("/kitchen-status/:kitchenId", async (req,res)=>{
         if(!user){
             return res.status(404).send({message:"User not found"})
         }
-        res.status(200).send({message: "Kitchen status updated", status: user.isKitchenOnline, kitchenNumber: user.phone})
+        res.status(200).send({message: "Kitchen status updated", status: user.isKitchenOnline, kitchenNumber: user.phone, kitchenName: user.kitchenName})
     } catch (error) {
         res.status(500).send({message: "Internal server error"})  
     }
