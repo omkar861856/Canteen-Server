@@ -8,6 +8,7 @@ import generalFeedbackRoutes from './generalFeedbackRoutes.js'
 import authRoutes from './authRoutes.js'
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
+import notificationRoutes from './notificationRoutes.js'
 
 const router = Router();
 
@@ -34,6 +35,8 @@ router.use('/payments', paymentsRoutes)
 router.use('/razorpay', razorpayRoutes)
 router.use('/generalfeedback', generalFeedbackRoutes)
 router.use('/auth', authRoutes)  
+router.use('/notifications', notificationRoutes)
+
 
 
 export default router;     

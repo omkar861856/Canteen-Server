@@ -362,7 +362,7 @@ router.post('/update-kitchen-status', async (req,res)=>{
         const {kitchenId, status} = req.body;
         const user = await User.findOne({ kitchenId });
         if(!user){
-            return res.status(404).send({message:"User not found"})
+            return res.status(404).send({message:"Kitchen not found"})
         }
         user.isKitchenOnline = status
         await user.save()
@@ -407,5 +407,20 @@ router.get("/kitchen-status/:kitchenId", async (req,res)=>{
     }
 })
 
+// Backend route to handle login status
+router.post('/status', (req, res) => { 
+    const { phone } = req.body;
+
+    const user = User.find({phone})
+
+    // Check user status in database or session (mocked here)
+    const status = user.isLoggedIn;
+
+    if (status) {
+        return res.status(200).json({ isLoggedIn: status});
+    } else {
+        return res.status(404).json({ error: 'User not found' });
+    }
+});
 
 export default router;

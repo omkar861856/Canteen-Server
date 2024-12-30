@@ -1,5 +1,15 @@
 import { Server } from 'socket.io';
 
+import webPush from 'web-push'
+
+export const vapidKeys = webPush.generateVAPIDKeys();
+
+webPush.setVapidDetails(
+  'mailto:omkar861856@gmail.com',
+  `${vapidKeys.publicKey}`,
+  `${vapidKeys.privateKey}`
+)
+
 const userSockets = new Map(); // { userId: socketId }
 
 /**
@@ -99,6 +109,43 @@ export const initializeSocket = (server) => {
 
   io.of('/kitchen').on('connection', (socket) => {
     console.log('Kitchen connected:', socket.id);
+
+      // Send a personalized message to the connected client
+      socket.emit('welcomeMessage', {message:`Hello kitchen ${socket.id}, welcome to the server!`, vapiPublicKey: vapidKeys.publicKey});
+
+      // Listen for a new message sent by the kitchen
+  socket.on('messageFromKitchen', (messageData) => {
+    console.log('Message received from kitchen:', messageData);
+    
+    const pushSubscription = {
+      endpoint: messageData.endpoint,
+      keys: {
+        p256dh: messageData.p256dh,
+        auth: messageData.auth
+      }
+    };
+    
+    const payload = JSON.stringify({
+      title: 'Hello!',
+      body: 'This is a test notification!',
+      icon: '/icon.png', // Path to your notification icon
+      badge: '/badge.png' // Path to your notification badge
+    });
+    
+    webPush.sendNotification(pushSubscription, payload)
+      .then((response) => {
+        console.log('Notification sent:', 
+          "this is spartacus"
+        );
+      })
+      .catch((error) => {
+        console.error('Error sending notification:', error);
+      });
+
+    // Optionally, acknowledge receipt back to the kitchen
+    socket.emit('messageAcknowledged', { status: 'received', messageData });
+  });
+
   
     // Notify all users of a new menu item
     socket.on('menuItemCreated', (menuItem) => {
